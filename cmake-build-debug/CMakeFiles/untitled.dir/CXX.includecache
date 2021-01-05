@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Marco/CLionProjects/untitled/board.h
+iostream
+-
+ship.h
+C:/Users/Marco/CLionProjects/untitled/ship.h
+
+C:/Users/Marco/CLionProjects/untitled/main.cpp
+ship.h
+C:/Users/Marco/CLionProjects/untitled/ship.h
+board.h
+C:/Users/Marco/CLionProjects/untitled/board.h
+player.h
+C:/Users/Marco/CLionProjects/untitled/player.h
+
+C:/Users/Marco/CLionProjects/untitled/player.cpp
+player.h
+C:/Users/Marco/CLionProjects/untitled/player.h
+
+C:/Users/Marco/CLionProjects/untitled/player.h
+iostream
+-
+string
+-
+random
+-
+ship.h
+C:/Users/Marco/CLionProjects/untitled/ship.h
+board.h
+C:/Users/Marco/CLionProjects/untitled/board.h
+
+C:/Users/Marco/CLionProjects/untitled/ship.h
+iostream
+-
+
