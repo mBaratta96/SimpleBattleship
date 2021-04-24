@@ -6,6 +6,7 @@
 #define PLAYER_H
 #include <iostream>
 #include <string>
+#include <memory>
 #include <random>
 #include "ship.h"
 #include "board.h"
@@ -34,9 +35,11 @@ public:
 
 class Adversary: public Player{
 private:
-    int guessed_pos[2] = {-1, -1};
+    int guessed_pos[2]{-1, -1};
     int tried_dirs[4];
-    int direction_found = 0;
+    bool direction[2]{false, false};
+    bool found_first_attack_point{false};
+    vector<tuple<int, int>> possible_next_attack_points;
 public:
     Adversary();
     void play_game(Player *ad);

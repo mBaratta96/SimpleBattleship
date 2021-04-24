@@ -5,21 +5,22 @@
 #include "player.h"
 
 bool Player::check_position(int count, bool dir, int coords[2]){
-    if (count==0){
-        destroyer = make_unique<Destroyer>(dir, coords);
-        return board.add_ship(destroyer.get());
-    }else if (count==1){
-        submarine1 = make_unique<Submarine>(dir, coords);
-        return board.add_ship(submarine1.get());
-    }else if (count==2) {
-        submarine2 = make_unique<Submarine>(dir, coords);
-        return board.add_ship(submarine2.get());
-    }else if (count==3){
-        battleship = make_unique<Battleship>(dir, coords);
-        return board.add_ship(battleship.get());
-    } else{
-        carrier = make_unique<Carrier>(dir, coords);
-        return board.add_ship(carrier.get());
+    switch(count){
+        case 0:
+            ship = make_unique<Destroyer>(dir, coords);
+            break;
+        case 1:
+            ship = make_unique<Submarine>(dir, coords);
+            break;
+        case 2:
+            ship = make_unique<Submarine>(dir, coords);
+            break;
+        case 3:
+            ship = make_unique<Battleship>(dir, coords);
+            break;
+        default:
+            ship = make_unique<Carrier>(dir, coords);
+        return board.add_ship(ship.get())
     }
 }
 
@@ -162,7 +163,7 @@ void Adversary::play_game(Player *ad) {
     int launch_result,a,b;
     uniform_int_distribution<> distrib_grid(0, 9);
     uniform_int_distribution<> distrib_dir(0,1);
-    if (guessed_pos[0]==-1) {
+    if (!found_first_attack_point) { //starting point
         do {
             a = distrib_grid(gen);
             b = distrib_grid(gen);
@@ -170,9 +171,14 @@ void Adversary::play_game(Player *ad) {
         cout << a << b << endl;
         launch_result = ad->launch(a, b);
         if (launch_result) {
+            found_first_attack_point = true;
             guessed_pos[0] = a;
             guessed_pos[1] = b;
             board_adv.hit(a,b);
+            if (!(board_adv.isHit(a-1,b)||board_adv.isMiss(a-1,b)) && a-1>=0)
+                possible_next_attack_points.push_back(make_tuple(a-1, b));
+            if (!(board_adv.isHit(a+1,b)||board_adv.isMiss(a+1,b)) && a+1<10)
+                possible_next_attack_points.push_back(make_tuple(a+1, b));
             tried_dirs[0] = (int)(!(board_adv.isHit(a-1,b)||board_adv.isMiss(a-1,b)) && a-1>=0);
             tried_dirs[1] = (int)(!(board_adv.isHit(a+1,b)||board_adv.isMiss(a+1,b)) && a+1<10);
             tried_dirs[2] = (int)(!(board_adv.isHit(a,b-1)||board_adv.isMiss(a,b-1)) && b-1>=0);
