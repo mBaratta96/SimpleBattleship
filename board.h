@@ -4,24 +4,30 @@
 
 #ifndef BOARD_H
 #define BOARD_H
-#define HIT 'X'
+/*#define HIT 'X'
 #define MISS 'O'
 #define FREE ' '
-#define OCCUPIED 'Y'
+#define OCCUPIED 'Y'*/
 #include <iostream>
 #include "ship.h"
-using namespace std;
+using std::cout;
+using std::endl;
 
 class Board{
 private:
     char grid[10][10];
+    const char free{' '};
+    const char miss{'O'};
+    const char hit{'X'};
+    const char occupied{'Y'};
+    
 public:
     Board();
     void print_grid();
     bool add_ship(Ship* s);
     int check_coord(int a, int b);
-    void hit(int a, int b);
-    void miss(int a, int b);
+    void hit_ship(int a, int b);
+    void missed_ship(int a, int b);
     bool isHit(int a, int b);
     bool isMiss(int a, int b);
 };

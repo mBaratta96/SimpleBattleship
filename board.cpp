@@ -6,7 +6,7 @@
 Board::Board(){
     for(int i=0; i<10; i++)
         for(int j=0; j<10; j++)
-            grid[i][j] = FREE;
+            grid[i][j] = free;
 }
 
 void Board::print_grid(){
@@ -34,39 +34,39 @@ bool Board::add_ship(Ship* s){
     bool dir_s = s->get_dir();
     int *start_s = s->get_start();
     int len_s = s->get_len();
-    bool free = true;
+    bool is_free = true;
 
     for(int i=0; i<len_s; i++)
-        free = free * (grid[start_s[0]+i*(!dir_s)][start_s[1]+i*dir_s]==FREE);
-    if (free)
+        is_free = is_free * (grid[start_s[0]+i*(!dir_s)][start_s[1]+i*dir_s]==free);
+    if (is_free)
         for(int i=0; i<len_s; i++)
             grid[start_s[0]+i*(!dir_s)][start_s[1]+i*dir_s] = '0'+len_s;
-    return free;
+    return is_free;
 }
 
 int Board::check_coord(int a, int b){
-    if (grid[a][b] != FREE) {
+    if (grid[a][b] != free) {
         cout << "HIT!" << endl;
         int ship_n = (int) (grid[a][b] - '0');
-        grid[a][b] = HIT;
+        grid[a][b] = hit;
         return ship_n;
     }
     cout << "MISS!" << endl;
     return 0;
 }
 
-void Board::hit(int a, int b){
-    grid[a][b] = HIT;
+void Board::hit_ship(int a, int b){
+    grid[a][b] = hit;
 }
 
-void Board::miss(int a, int b){
-    grid[a][b] = MISS;
+void Board::missed_ship(int a, int b){
+    grid[a][b] = miss;
 }
 
 bool Board::isHit(int a, int b) {
-    return grid[a][b]==HIT;
+    return grid[a][b]==hit;
 }
 
 bool Board::isMiss(int a, int b) {
-    return grid[a][b]==MISS;
+    return grid[a][b]==hit;
 }

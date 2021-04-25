@@ -3,6 +3,8 @@
 #include "player.h"
 
 int main() {
+    using std::cout;
+    using std::endl;
     Adversary ad;
     Me me;
     cout << "Let's play!!!" << endl;

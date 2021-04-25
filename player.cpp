@@ -7,20 +7,20 @@
 bool Player::check_position(int count, bool dir, int coords[2]){
     switch(count){
         case 0:
-            ship = make_unique<Destroyer>(dir, coords);
-            break;
+            destroyer = std::make_unique<Destroyer>(dir, coords);
+            return board.add_ship(destroyer.get());
         case 1:
-            ship = make_unique<Submarine>(dir, coords);
-            break;
+            submarine1 = std::make_unique<Submarine>(dir, coords);
+            return board.add_ship(submarine1.get());
         case 2:
-            ship = make_unique<Submarine>(dir, coords);
-            break;
+            submarine2 = std::make_unique<Submarine>(dir, coords);
+            return board.add_ship(submarine2.get());
         case 3:
-            ship = make_unique<Battleship>(dir, coords);
-            break;
+            battleship = std::make_unique<Battleship>(dir, coords);
+            return board.add_ship(battleship.get());
         default:
-            ship = make_unique<Carrier>(dir, coords);
-        return board.add_ship(ship.get())
+            carrier = std::make_unique<Carrier>(dir, coords);
+            return board.add_ship(carrier.get());
     }
 }
 
@@ -117,9 +117,9 @@ void Me::play_game(Player *ad){
     } while (board_adv.isHit(a,b)||board_adv.isMiss(a,b));
     launch_result = ad->launch(a,b);
     if (launch_result)
-        board_adv.hit(a, b);
+        board_adv.hit_ship(a, b);
     else
-        board_adv.miss(a, b);
+        board_adv.missed_ship(a, b);
     board_adv.print_grid();
 }
 
@@ -161,8 +161,8 @@ void Adversary::play_game(Player *ad) {
     random_device rd;
     mt19937 gen(rd());
     int launch_result,a,b;
-    uniform_int_distribution<> distrib_grid(0, 9);
-    uniform_int_distribution<> distrib_dir(0,1);
+    uniform_int_distribution<> distrib_grid(0, 1);
+    uniform_int_distribution<> distrib_dir(0, 1);
     if (!found_first_attack_point) { //starting point
         do {
             a = distrib_grid(gen);
@@ -174,18 +174,27 @@ void Adversary::play_game(Player *ad) {
             found_first_attack_point = true;
             guessed_pos[0] = a;
             guessed_pos[1] = b;
-            board_adv.hit(a,b);
+            board_adv.hit_ship(a,b);
             if (!(board_adv.isHit(a-1,b)||board_adv.isMiss(a-1,b)) && a-1>=0)
                 possible_next_attack_points.push_back(make_tuple(a-1, b));
             if (!(board_adv.isHit(a+1,b)||board_adv.isMiss(a+1,b)) && a+1<10)
                 possible_next_attack_points.push_back(make_tuple(a+1, b));
+            if (!(board_adv.isHit(a,b-1)||board_adv.isMiss(a,b-1)) && b-1>=0)
+                possible_next_attack_points.push_back(make_tuple(a, b-1));
+            if (!(board_adv.isHit(a,b+1)||board_adv.isMiss(a,b+1)) && b+1<10)
+                possible_next_attack_points.push_back(make_tuple(a, b+1));            /*
             tried_dirs[0] = (int)(!(board_adv.isHit(a-1,b)||board_adv.isMiss(a-1,b)) && a-1>=0);
             tried_dirs[1] = (int)(!(board_adv.isHit(a+1,b)||board_adv.isMiss(a+1,b)) && a+1<10);
             tried_dirs[2] = (int)(!(board_adv.isHit(a,b-1)||board_adv.isMiss(a,b-1)) && b-1>=0);
-            tried_dirs[3] = (int)(!(board_adv.isHit(a,b+1)||board_adv.isMiss(a,b+1)) && b+1<10);
+            tried_dirs[3] = (int)(!(board_adv.isHit(a,b+1)||board_adv.isMiss(a,b+1)) && b+1<10);*/
+            for(int i = 0; i < possible_next_attack_points.size(); i++){
+                cout << get<0>(possible_next_attack_points[i]) << get<1>(possible_next_attack_points[i]) << endl;
+            }
         }else{
-            board_adv.miss(a,b);
+            board_adv.missed_ship(a,b);
+            cout << "Missed!" << endl;
         }
+    /*
     }else{
         cout << "Tried Dirs: "<< endl;
         for(int i=0; i<4;i++)
@@ -235,7 +244,7 @@ void Adversary::play_game(Player *ad) {
                 direction_found = 0;
             }
         }
-    }
+    }*/
     cout << "Visione Computer" << endl;
     board_adv.print_grid();
 }

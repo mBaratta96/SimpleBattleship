@@ -5,7 +5,8 @@
 #ifndef SHIP_H
 #define SHIP_H
 #include <iostream>
-using namespace std;
+using std::cout;
+using std::endl;
 
 class Ship {
 protected:

@@ -10,6 +10,11 @@
 #include <random>
 #include "ship.h"
 #include "board.h"
+using std::unique_ptr;
+using std::vector;
+using std::tuple;
+using std::cout;
+using std::endl;
 
 class Player{
 protected:
